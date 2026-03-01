@@ -1,0 +1,16 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '--build-arg'
+      - 'NEXT_PUBLIC_CONVEX_URL=https://sensible-clam-597.eu-west-1.convex.cloud'
+      - '--build-arg'
+      - 'NEXT_PUBLIC_CONVEX_SITE_URL=https://sensible-clam-597.eu-west-1.convex.site'
+      - '-t'
+      - 'gcr.io/digitalium-ga/agasa-ga'
+      - '.'
+
+images:
+  - 'gcr.io/digitalium-ga/agasa-ga'
+
+timeout: '1200s'
