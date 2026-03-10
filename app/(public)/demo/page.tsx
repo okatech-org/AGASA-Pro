@@ -20,8 +20,9 @@ export default function DemoPage() {
     const router = useRouter();
 
     const handleDemoLogin = (role: string) => {
-        // Logique de simulation de connexion (redirection vers le dashboard)
-        // Dans une future étape, on pourrait setter un cookie "demoRole" pour adapter l'affichage
+        // Écrire le firebaseUid démo dans localStorage pour que DemoUserProvider le détecte
+        const demoUid = `demo-${role}`;
+        localStorage.setItem("agasa-demo-uid", demoUid);
         router.push("/tableau-de-bord");
     };
 
