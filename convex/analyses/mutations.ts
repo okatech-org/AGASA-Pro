@@ -1,5 +1,6 @@
 import { mutation } from "../_generated/server";
 import { v } from "convex/values";
+import { internal } from "../_generated/api";
 
 export const commanderAnalyses = mutation({
     args: {
@@ -43,6 +44,46 @@ export const commanderAnalyses = mutation({
             etapeActuelle: "soumis",
             historiqueEtapes: [{ etape: "soumis", date: now, commentaire: "Commande créée" }],
             dateCreation: now,
+        });
+
+        const payload = {
+            type: "commande_analyse",
+            source: "AGASA-Pro",
+            commandeId: String(id),
+            numeroCommande: numero,
+            matrice: args.matrice,
+            echantillonDescription: args.echantillonDescription,
+            express: args.express,
+            montantTotal,
+            parametres: args.parametresSelectionnes.map((p) => ({
+                code: p.parametreCode,
+                nom: p.parametreNom,
+                tarif: p.tarif,
+            })),
+            operateur: {
+                id: String(operateur._id),
+                raisonSociale: operateur.raisonSociale,
+                rccm: operateur.rccm,
+                province: operateur.province,
+            },
+            dateCommande: now,
+        };
+
+        const fluxRefId = await ctx.db.insert("fluxInterApps", {
+            fluxCode: "F1",
+            direction: "envoi",
+            typeMessage: "commande_analyse",
+            payload: JSON.stringify(payload),
+            statut: "envoye",
+            dateEnvoi: now,
+            tentatives: 0,
+        });
+
+        const internalApi = internal as any;
+        await ctx.scheduler.runAfter(0, internalApi.gateway.outbound.pushToCore, {
+            typeMessage: "commande_analyse",
+            payload,
+            fluxRefId,
         });
 
         return { id, numeroCommande: numero, montantTotal };

@@ -1,4 +1,5 @@
 import { CheckCircle2 } from "lucide-react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -14,6 +15,9 @@ export default function TarifsPage() {
 
             {/* Agréments Sanitaires */}
             <div className="mb-16">
+                <div className="relative w-full aspect-[16/9] overflow-hidden rounded-2xl mb-6">
+                    <Image src="/images/gabon/gabon-public-service.jpg" alt="Agrément sanitaire AGASA-Pro" fill sizes="(max-width: 768px) 100vw, 960px" className="object-cover" />
+                </div>
                 <h2 className="text-2xl font-bold border-b pb-2 mb-6 text-primary flex items-center">
                     <CheckCircle2 className="w-6 h-6 mr-2" /> Agrément Sanitaire
                 </h2>
@@ -66,6 +70,9 @@ export default function TarifsPage() {
 
             {/* Prestations Importation */}
             <div className="mb-16">
+                <div className="relative w-full aspect-[16/9] overflow-hidden rounded-2xl mb-6">
+                    <Image src="/images/gabon/libreville-city.jpg" alt="Prestations à l'importation AGASA-Pro" fill sizes="(max-width: 768px) 100vw, 960px" className="object-cover" />
+                </div>
                 <h2 className="text-2xl font-bold border-b pb-2 mb-6 text-primary flex items-center">
                     <CheckCircle2 className="w-6 h-6 mr-2" /> Prestations à l'Importation (Frais Variables)
                 </h2>

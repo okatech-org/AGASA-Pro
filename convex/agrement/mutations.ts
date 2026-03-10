@@ -1,5 +1,7 @@
 import { mutation } from "../_generated/server";
 import { v } from "convex/values";
+import { internal } from "../_generated/api";
+import { CATEGORIES_ACTION, CORTEX, SIGNAL_TYPES, genererCorrelationId } from "../lib/neocortex";
 
 export const creerDemandeAgrement = mutation({
     args: {
@@ -41,6 +43,40 @@ export const creerDemandeAgrement = mutation({
             dateModification: now,
         });
 
+        await ctx.db.insert("signaux", {
+            type: SIGNAL_TYPES.DOSSIER_CREE,
+            source: CORTEX.METIER,
+            destination: CORTEX.LIMBIQUE,
+            entiteType: "agrements",
+            entiteId: String(id),
+            payload: {
+                numeroDossier: numero,
+                categorie: args.categorie,
+                type: args.type,
+            },
+            confiance: 1,
+            priorite: "NORMAL",
+            correlationId: genererCorrelationId(),
+            traite: false,
+            timestamp: now,
+        });
+
+        await ctx.db.insert("historiqueActions", {
+            action: "AGREMENT_CREE",
+            categorie: CATEGORIES_ACTION.METIER,
+            entiteType: "agrements",
+            entiteId: String(id),
+            userId: String(operateur._id),
+            details: {
+                numeroDossier: numero,
+                categorie: args.categorie,
+                type: args.type,
+                montant,
+            },
+            metadata: { source: CORTEX.METIER },
+            timestamp: now,
+        });
+
         return { id, numeroDossier: numero, montant };
     },
 });
@@ -56,6 +92,83 @@ export const soumettreAgrement = mutation({
             etapeActuelle: "soumis",
             historiqueEtapes: [...agrement.historiqueEtapes, { etape: "soumis", date: now, commentaire: "Dossier soumis par l'opérateur" }],
             dateModification: now,
+        });
+
+        await ctx.db.insert("signaux", {
+            type: SIGNAL_TYPES.DOSSIER_SOUMIS,
+            source: CORTEX.METIER,
+            destination: CORTEX.GATEWAY,
+            entiteType: "agrements",
+            entiteId: String(args.agrementId),
+            payload: {
+                numeroDossier: agrement.numeroDossier,
+                etape: "soumis",
+            },
+            confiance: 1,
+            priorite: "HIGH",
+            correlationId: genererCorrelationId(),
+            traite: false,
+            timestamp: now,
+        });
+
+        await ctx.db.insert("historiqueActions", {
+            action: "AGREMENT_SOUMIS",
+            categorie: CATEGORIES_ACTION.METIER,
+            entiteType: "agrements",
+            entiteId: String(args.agrementId),
+            details: {
+                numeroDossier: agrement.numeroDossier,
+            },
+            metadata: { source: CORTEX.METIER },
+            timestamp: now,
+        });
+
+        const operateur = await ctx.db.get(agrement.operateurId);
+        const etablissement = await ctx.db.get(agrement.etablissementId);
+        const payload = {
+            type: "demande_agrement",
+            source: "AGASA-Pro",
+            demandeId: String(args.agrementId),
+            numeroDossier: agrement.numeroDossier,
+            categorie: agrement.categorie,
+            typeDemande: agrement.type,
+            montant: agrement.montant,
+            operateur: operateur
+                ? {
+                    id: String(operateur._id),
+                    raisonSociale: operateur.raisonSociale,
+                    rccm: operateur.rccm,
+                    nif: operateur.nif,
+                    province: operateur.province,
+                }
+                : null,
+            etablissement: etablissement
+                ? {
+                    id: String(etablissement._id),
+                    nom: etablissement.nom,
+                    ville: etablissement.ville,
+                    province: etablissement.province,
+                    categorie: etablissement.categorie,
+                }
+                : null,
+            dateSoumission: now,
+        };
+
+        const fluxRefId = await ctx.db.insert("fluxInterApps", {
+            fluxCode: "F1",
+            direction: "envoi",
+            typeMessage: "demande_agrement",
+            payload: JSON.stringify(payload),
+            statut: "envoye",
+            dateEnvoi: now,
+            tentatives: 0,
+        });
+
+        const internalApi = internal as any;
+        await ctx.scheduler.runAfter(0, internalApi.gateway.outbound.pushToCore, {
+            typeMessage: "demande_agrement",
+            payload,
+            fluxRefId,
         });
 
         return { success: true };

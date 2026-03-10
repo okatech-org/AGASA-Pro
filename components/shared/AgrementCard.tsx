@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -53,7 +54,10 @@ export function AgrementCard({ agrement, variant = "full", className = "" }: Agr
     // Pas d'agrément
     if (!agrement) {
         return (
-            <Card className={`shadow-md border-2 border-dashed border-muted ${className}`}>
+            <Card className={`shadow-md border-2 border-dashed border-muted overflow-hidden ${className}`}>
+                <div className="relative w-full aspect-[16/9]">
+                    <Image src="/images/gabon/gabon-public-service.jpg" alt="Demande d'agrément sanitaire" fill sizes="(max-width: 768px) 100vw, 480px" className="object-cover" />
+                </div>
                 <CardContent className="p-6 text-center space-y-4">
                     <div className="mx-auto w-16 h-16 rounded-full bg-muted flex items-center justify-center">
                         <FileText className="w-8 h-8 text-muted-foreground" />
@@ -89,7 +93,10 @@ export function AgrementCard({ agrement, variant = "full", className = "" }: Agr
     // Agrément actif
     if (isActive) {
         return (
-            <Card className={`shadow-md border-green-200 bg-white ${className}`}>
+            <Card className={`shadow-md border-green-200 bg-white overflow-hidden ${className}`}>
+                <div className="relative w-full aspect-[16/9]">
+                    <Image src="/images/gabon/certificate-verification.jpg" alt="Certificat actif AGASA" fill sizes="(max-width: 768px) 100vw, 480px" className="object-cover" />
+                </div>
                 <CardContent className="p-5 space-y-4">
                     <div className="flex items-start justify-between">
                         <div>
@@ -180,7 +187,10 @@ export function AgrementCard({ agrement, variant = "full", className = "" }: Agr
         const totalSteps = 5;
 
         return (
-            <Card className={`shadow-md border-blue-200 bg-blue-50/30 ${className}`}>
+            <Card className={`shadow-md border-blue-200 bg-blue-50/30 overflow-hidden ${className}`}>
+                <div className="relative w-full aspect-[16/9]">
+                    <Image src="/images/gabon/team-review.jpg" alt="Demande d'agrément en cours" fill sizes="(max-width: 768px) 100vw, 480px" className="object-cover" />
+                </div>
                 <CardContent className="p-5 space-y-4">
                     <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">
                         🔵 Demande en cours
@@ -230,7 +240,10 @@ export function AgrementCard({ agrement, variant = "full", className = "" }: Agr
 
     // Agrément refusé
     return (
-        <Card className={`shadow-md border-red-200 bg-red-50/30 ${className}`}>
+        <Card className={`shadow-md border-red-200 bg-red-50/30 overflow-hidden ${className}`}>
+            <div className="relative w-full aspect-[16/9]">
+                <Image src="/images/gabon/gabon-compliance-council.jpg" alt="Demande d'agrément refusée" fill sizes="(max-width: 768px) 100vw, 480px" className="object-cover" />
+            </div>
             <CardContent className="p-5 space-y-4">
                 <Badge className="bg-red-100 text-red-700 hover:bg-red-100">
                     ❌ Demande refusée

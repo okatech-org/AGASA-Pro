@@ -3,6 +3,8 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/lib/firebase";
 
 // Profils démo disponibles
 export const DEMO_PROFILES = [
@@ -16,7 +18,7 @@ export const DEMO_PROFILES = [
 type DemoProfile = typeof DEMO_PROFILES[number];
 
 type Operateur = {
-    _id: any;
+    _id: string;
     firebaseUid: string;
     email?: string;
     telephone?: string;
@@ -49,18 +51,38 @@ type DemoUserContextType = {
 const DemoUserContext = createContext<DemoUserContextType | null>(null);
 
 export function DemoUserProvider({ children }: { children: ReactNode }) {
+    const enableDemoMode = process.env.NEXT_PUBLIC_ENABLE_DEMO_MODE === "true";
     const [currentUid, setCurrentUid] = useState<string>(() => {
         if (typeof window !== "undefined") {
-            return localStorage.getItem("agasa-demo-uid") || "demo-restaurateur";
+            if (enableDemoMode) {
+                return localStorage.getItem("agasa-demo-uid") || "demo-restaurateur";
+            }
+            return "";
         }
-        return "demo-restaurateur";
+        return "";
     });
 
-    const operateur = useQuery(api.auth.getMyProfile, { firebaseUid: currentUid });
+    useEffect(() => {
+        if (enableDemoMode) return;
+        if (!auth) {
+            setCurrentUid("");
+            return;
+        }
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setCurrentUid(user?.uid || "");
+        });
+        return unsubscribe;
+    }, [enableDemoMode]);
+
+    const operateur = useQuery(
+        api.auth.getMyProfile,
+        currentUid ? { firebaseUid: currentUid } : "skip"
+    );
 
     const currentProfile = DEMO_PROFILES.find(p => p.firebaseUid === currentUid) || DEMO_PROFILES[0];
 
     const switchProfile = (uid: string) => {
+        if (!enableDemoMode) return;
         setCurrentUid(uid);
         if (typeof window !== "undefined") {
             localStorage.setItem("agasa-demo-uid", uid);
@@ -90,8 +112,10 @@ export function useDemoUser() {
 
 // Composant de sélection de profil démo (barre flottante en haut)
 export function DemoProfileSwitcher() {
+    const enableDemoMode = process.env.NEXT_PUBLIC_ENABLE_DEMO_MODE === "true";
     const { currentProfile, switchProfile } = useDemoUser();
     const [isOpen, setIsOpen] = useState(false);
+    if (!enableDemoMode) return null;
 
     return (
         <div className="fixed top-0 left-0 right-0 z-[100] bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg">

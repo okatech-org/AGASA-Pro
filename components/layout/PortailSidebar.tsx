@@ -136,33 +136,33 @@ export function PortailSidebar() {
         <aside className="hidden md:flex flex-col w-64 lg:w-72 border-r bg-card h-screen sticky top-8 overflow-y-auto">
             {/* Logo Area */}
             <div className="p-6 border-b sticky top-0 bg-card z-10">
-                <Link href="/tableau-de-bord" className="flex items-center gap-2">
-                    <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold">
+                <Link href="/tableau-de-bord" className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--agasa-emerald)] to-[var(--agasa-blue)] flex items-center justify-center text-white font-bold shadow-[var(--shadow-glow)]">
                         AG
                     </div>
                     <div>
-                        <span className="font-bold text-lg leading-none block text-foreground">AGASA-Pro</span>
-                        <span className="text-xs text-muted-foreground">Portail Opérateur</span>
+                        <span className="font-serif font-bold text-lg leading-none block text-foreground">AGASA</span>
+                        <span className="text-caption text-muted-foreground">Portail Opérateur</span>
                     </div>
                 </Link>
             </div>
 
             {/* Bandeau Démo */}
             {isDemo && (
-                <div className="bg-success text-success-foreground p-3 text-xs flex flex-col gap-1 mx-4 mt-4 rounded-md shadow-sm">
+                <div className="bg-[var(--agasa-emerald)]/14 text-[var(--agasa-emerald)] p-3 text-xs flex flex-col gap-1 mx-4 mt-4 rounded-xl border border-[var(--agasa-emerald)]/20">
                     <div className="flex items-center gap-2 font-semibold">
                         <ShieldCheck className="w-4 h-4" />
                         MODE DÉMONSTRATION
                     </div>
-                    <span className="opacity-90">Les paiements et soumissions ne sont pas réels.</span>
+                    <span className="opacity-80">Les paiements et soumissions ne sont pas réels.</span>
                 </div>
             )}
 
             {/* Profil court */}
             {operateur && (
-                <div className="mx-4 mt-4 p-3 bg-muted/50 rounded-lg">
+                <div className="mx-4 mt-4 p-3 bg-muted/50 rounded-xl">
                     <p className="text-sm font-semibold text-foreground truncate">{operateur.raisonSociale}</p>
-                    <p className="text-xs text-muted-foreground">{operateur.ville}, {operateur.province}</p>
+                    <p className="text-caption text-muted-foreground">{operateur.ville}, {operateur.province}</p>
                 </div>
             )}
 
@@ -177,7 +177,7 @@ export function PortailSidebar() {
 
                     return (
                         <div key={i}>
-                            <h3 className="text-xs font-semibold text-muted-foreground tracking-wider mb-2 px-3">
+                            <h3 className="text-overline text-muted-foreground mb-3 px-3">
                                 {group.section}
                             </h3>
                             <ul className="space-y-1">
@@ -189,29 +189,29 @@ export function PortailSidebar() {
                                         <li key={j}>
                                             <Link
                                                 href={item.href}
-                                                className={`flex items-center gap-3 px-3 py-2.5 rounded-md transition-colors ${isActive
-                                                    ? "bg-primary text-primary-foreground font-medium shadow-sm"
+                                                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-nav transition-all duration-200 ${isActive
+                                                    ? "bg-[var(--agasa-emerald)]/14 text-[var(--agasa-emerald)] font-semibold shadow-sm"
                                                     : "text-foreground hover:bg-muted"
                                                     }`}
                                             >
-                                                <Icon className="w-5 h-5" />
+                                                <Icon className="w-5 h-5 shrink-0" strokeWidth={1.8} />
                                                 <span className="flex-1">{item.name}</span>
                                                 {item.star && (
-                                                    <span className="text-yellow-500 text-xs">★</span>
+                                                    <span className="text-[var(--agasa-gold)] text-xs">★</span>
                                                 )}
                                                 {item.subItems && (
-                                                    <ChevronRight className={`w-4 h-4 ml-auto transition-transform ${isActive ? "rotate-90" : ""}`} />
+                                                    <ChevronRight className={`w-4 h-4 ml-auto transition-transform duration-200 ${isActive ? "rotate-90" : ""}`} />
                                                 )}
                                             </Link>
 
                                             {isActive && item.subItems && (
-                                                <ul className="mt-1 ml-9 pl-3 border-l-2 border-border space-y-1">
+                                                <ul className="mt-1 ml-9 pl-3 border-l-2 border-[var(--agasa-emerald)]/20 space-y-1">
                                                     {item.subItems.map((sub, k) => (
                                                         <li key={k}>
                                                             <Link
                                                                 href={sub.href}
-                                                                className={`block py-1.5 px-3 text-sm rounded-md transition-colors ${pathname === sub.href
-                                                                    ? "text-primary font-medium bg-primary/5"
+                                                                className={`block py-1.5 px-3 text-sm rounded-lg transition-colors duration-200 ${pathname === sub.href
+                                                                    ? "text-[var(--agasa-emerald)] font-medium bg-[var(--agasa-emerald)]/5"
                                                                     : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                                                                     }`}
                                                             >
@@ -232,7 +232,7 @@ export function PortailSidebar() {
 
             {/* Footer / User Area */}
             <div className="p-4 border-t sticky bottom-0 bg-card z-10 space-y-2">
-                <Button variant="ghost" asChild className="w-full justify-start gap-2 h-10 text-destructive hover:bg-destructive/10 hover:text-destructive">
+                <Button variant="ghost" asChild className="w-full justify-start gap-2 h-12 text-destructive hover:bg-destructive/10 hover:text-destructive rounded-xl">
                     <Link href="/">
                         <LogOut className="w-4 h-4" />
                         Déconnexion

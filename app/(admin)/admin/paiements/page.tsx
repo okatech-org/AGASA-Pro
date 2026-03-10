@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Wallet, TrendingUp, AlertCircle, Check } from "lucide-react";
+import { useFirebaseSession } from "@/lib/useFirebaseSession";
 
 function formatDate(ts: number) { return new Date(ts).toLocaleDateString("fr-FR"); }
 function formatMoney(n: number) { return n.toLocaleString("fr-FR") + " FCFA"; }
@@ -18,11 +19,16 @@ const STATUT_BADGES: Record<string, { label: string; color: string }> = {
 };
 
 export default function AdminPaiementsPage() {
-    const paiements = useQuery(api.admin.queries.listAllPaiements, {});
+    const { uid, isLoading: authLoading } = useFirebaseSession();
+    const paiements = useQuery(api.admin.queries.listAllPaiements, uid ? { adminFirebaseUid: uid } : "skip");
     const confirmer = useMutation(api.admin.mutations.confirmerVirement);
 
-    if (paiements === undefined) {
+    if (authLoading || paiements === undefined) {
         return <div className="flex items-center justify-center min-h-[50vh]"><div className="w-10 h-10 border-4 border-[#1B4F72] border-t-transparent rounded-full animate-spin" /></div>;
+    }
+
+    if (!uid) {
+        return <div className="text-sm text-muted-foreground">Connexion administrateur requise.</div>;
     }
 
     const confirmed = paiements.filter((p: any) => p.statut === "confirme");
@@ -79,7 +85,7 @@ export default function AdminPaiementsPage() {
                                             <td className="p-3"><Badge className={`${badge.color} text-[10px]`}>{badge.label}</Badge></td>
                                             <td className="p-3 text-right">
                                                 {p.statut === "en_attente" && p.modePaiement === "virement" && (
-                                                    <Button size="sm" variant="outline" className="text-xs gap-1" onClick={() => confirmer({ paiementId: p._id })}>
+                                                    <Button size="sm" variant="outline" className="text-xs gap-1" onClick={() => confirmer({ adminFirebaseUid: uid, paiementId: p._id })}>
                                                         <Check className="w-3 h-3" /> Confirmer
                                                     </Button>
                                                 )}

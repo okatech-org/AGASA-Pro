@@ -4,6 +4,7 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from "@/components/ui/accordion";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { MessageCircleQuestion, Phone, Mail } from "lucide-react";
@@ -13,6 +14,7 @@ export default function FAQPage() {
         {
             title: "Inscription & Mon Compte",
             icon: "👤",
+            image: "/images/gabon/mobile-citizen-service.jpg",
             questions: [
                 { q: "L'inscription sur AGASA-Pro est-elle payante ?", a: "Non, la création de compte est totalement gratuite. Vous ne payez que lors de la soumission d'une demande officielle (Agrément, Importation, Analyse)." },
                 { q: "Je n'ai pas d'adresse e-mail, puis-je m'inscrire ?", a: "Absolument. Un simple numéro de téléphone gabonais (+241) suffit. Vous recevrez un mot de passe temporaire par SMS pour vous connecter." },
@@ -23,6 +25,7 @@ export default function FAQPage() {
         {
             title: "Demandes d'Agrément Sanitaire",
             icon: "📜",
+            image: "/images/gabon/gabon-public-service.jpg",
             questions: [
                 { q: "Quelles sont les pièces à fournir pour un Agrément ?", a: "Pour une Catégorie 2 ou 3 : Votre RCCM (ou Fiche Circuit), votre pièce d'identité, et le plan des locaux (un simple croquis suffit pour les CAT 3). Pour les industriels (CAT 1), le plan HACCP complet est requis." },
                 { q: "Combien de temps faut-il pour obtenir l'Agrément ?", a: "Une fois le dossier complet soumis et payé en ligne, le délai légal maximum d'instruction est de 30 jours (incluant l'inspection physique). La décision vous est notifiée par SMS et sur la plateforme." },
@@ -32,6 +35,7 @@ export default function FAQPage() {
         {
             title: "Paiements & Quittances",
             icon: "💳",
+            image: "/images/gabon/smartphone-guidance.jpg",
             questions: [
                 { q: "Quels sont les moyens de paiement acceptés ?", a: "Vous pouvez payer en ligne via Airtel Money, Moov Africa, par carte bancaire (Visa/Mastercard) ou effectuer un virement bancaire pour les montants importants. Aucun paiement en espèces n'est accepté dans les bureaux de l'AGASA." },
                 { q: "Mon paiement Airtel Money affiche 'Échoué', que faire ?", a: "Vérifiez que votre solde est suffisant. Assurez-vous d'approuver la transaction sur votre téléphone rapidement après avoir reçu le pop-up USSD." },
@@ -41,6 +45,7 @@ export default function FAQPage() {
         {
             title: "Importation (DPI, AMC)",
             icon: "🚢",
+            image: "/images/gabon/libreville-city.jpg",
             questions: [
                 { q: "Je dois déclarer 20 factures, dois-je faire 20 dossiers ?", a: "Non, vous regroupez l'ensemble des manifestes/factures associés à un seul arrivage (Avis d'Arrivée) dans le même dossier." },
                 { q: "J'ai perdu mon AMC papier au Port", a: "Il n'y a plus de papier ! L'AMC est 100% numérisée. Connectez-vous sur votre téléphone, allez dans la demande correspondante et montrez le QR Code à l'inspecteur sur place." }
@@ -65,6 +70,15 @@ export default function FAQPage() {
             <div className="space-y-12">
                 {categories.map((cat, i) => (
                     <div key={i} className="bg-card border rounded-2xl overflow-hidden shadow-sm">
+                        <div className="relative aspect-[16/9] w-full">
+                            <Image
+                                src={cat.image}
+                                alt={`Illustration ${cat.title}`}
+                                fill
+                                sizes="(max-width: 768px) 100vw, 960px"
+                                className="object-cover"
+                            />
+                        </div>
                         <div className="bg-muted px-6 py-4 flex items-center gap-3 border-b">
                             <span className="text-2xl">{cat.icon}</span>
                             <h2 className="text-xl font-bold">{cat.title}</h2>

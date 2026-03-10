@@ -4,11 +4,16 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ══════════════════════════════════════════════════
+   AGASA Design System — Tokens & Utilities
+   Application : AGASA-Pro (accent: emerald)
+   ══════════════════════════════════════════════════ */
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -45,88 +50,547 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
+
+  /* ── AGASA Extended Palette (Tailwind mappings) ── */
+  --color-agasa-emerald: var(--agasa-emerald);
+  --color-agasa-blue: var(--agasa-blue);
+  --color-agasa-amber: var(--agasa-amber);
+  --color-agasa-rose: var(--agasa-rose);
+  --color-agasa-violet: var(--agasa-violet);
+  --color-agasa-cyan: var(--agasa-cyan);
+  --color-agasa-teal: var(--agasa-teal);
+  --color-agasa-gold: var(--agasa-gold);
+  --color-agasa-primary: var(--agasa-primary);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
 }
 
+/* ══════════════════════════════════════════════════
+   1. COLOR TOKENS — Light Mode (default)
+   ══════════════════════════════════════════════════ */
 :root {
   --radius: 0.625rem;
-  --background: #FAFBFC;
-  --foreground: #000000;
-  --card: #FFFFFF;
-  --card-foreground: #000000;
-  --popover: #FFFFFF;
-  --popover-foreground: #000000;
-  --primary: #1B6B3A;
-  --primary-foreground: #FFFFFF;
-  --secondary: #2E86C1;
-  --secondary-foreground: #FFFFFF;
-  --muted: #FAFBFC;
-  --muted-foreground: #666666;
-  --accent: #F39C12;
-  --accent-foreground: #FFFFFF;
-  --destructive: #E74C3C;
-  --destructive-foreground: #FFFFFF;
-  --border: #E0E0E0;
-  --input: #E0E0E0;
-  --ring: #1B6B3A;
-  --chart-1: #1B6B3A;
-  --chart-2: #2E86C1;
-  --chart-3: #F39C12;
-  --chart-4: #E74C3C;
-  --chart-5: #27AE60;
-  --sidebar: #FFFFFF;
-  --sidebar-foreground: #000000;
-  --sidebar-primary: #1B6B3A;
-  --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #FAFBFC;
-  --sidebar-accent-foreground: #1B6B3A;
-  --sidebar-border: #E0E0E0;
-  --sidebar-ring: #1B6B3A;
-  --success: #27AE60;
-  --success-foreground: #FFFFFF;
+
+  /* ── Fonds ── */
+  --background: hsl(220, 20%, 97%);     /* #f5f7fa */
+  --foreground: hsl(230, 30%, 16%);     /* #1a1f36 */
+
+  --card: hsl(0, 0%, 100%);             /* #ffffff */
+  --card-foreground: hsl(230, 30%, 16%);
+
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(230, 30%, 16%);
+
+  /* ── Couleurs Institutionnelles ── */
+  --primary: hsl(222, 47%, 18%);        /* #17253f — Bleu marine AGASA */
+  --primary-foreground: hsl(0, 0%, 100%);
+
+  --secondary: hsl(217, 91%, 60%);      /* #3b82f6 — Bleu vif */
+  --secondary-foreground: hsl(0, 0%, 100%);
+
+  --muted: hsl(220, 14%, 95%);          /* #f0f2f5 */
+  --muted-foreground: hsl(220, 9%, 46%); /* #6b7280 — ratio ≥ 5.5:1 */
+
+  --accent: hsl(160, 84%, 39%);         /* #10b981 — Vert AGASA = accent AGASA-Pro */
+  --accent-foreground: hsl(0, 0%, 100%);
+
+  --destructive: hsl(350, 89%, 60%);    /* #f43f5e */
+  --destructive-foreground: hsl(0, 0%, 100%);
+
+  /* ── Bordures & Inputs ── */
+  --border: hsl(220, 13%, 91%);         /* #e5e7eb */
+  --input: hsl(220, 13%, 91%);
+  --ring: hsl(217, 91%, 60%);           /* = blue, focus ring */
+
+  /* ── Palette AGASA étendue ── */
+  --agasa-primary: hsl(222, 47%, 18%);
+  --agasa-emerald: hsl(160, 84%, 39%);  /* #10b981 */
+  --agasa-blue: hsl(217, 91%, 60%);     /* #3b82f6 */
+  --agasa-amber: hsl(38, 92%, 50%);     /* #f59e0b */
+  --agasa-rose: hsl(350, 89%, 60%);     /* #f43f5e */
+  --agasa-violet: hsl(258, 90%, 66%);   /* #8b5cf6 */
+  --agasa-cyan: hsl(189, 94%, 43%);     /* #06b6d4 */
+  --agasa-teal: hsl(168, 76%, 42%);     /* #14b8a6 */
+  --agasa-gold: hsl(48, 96%, 53%);      /* #eab308 */
+
+  /* ── Success (legacy compat) ── */
+  --success: hsl(160, 84%, 39%);
+  --success-foreground: hsl(0, 0%, 100%);
+
+  /* ── Charts ── */
+  --chart-1: hsl(160, 84%, 39%);
+  --chart-2: hsl(217, 91%, 60%);
+  --chart-3: hsl(38, 92%, 50%);
+  --chart-4: hsl(350, 89%, 60%);
+  --chart-5: hsl(258, 90%, 66%);
+
+  /* ── Sidebar ── */
+  --sidebar: hsl(0, 0%, 100%);
+  --sidebar-foreground: hsl(230, 30%, 16%);
+  --sidebar-primary: hsl(160, 84%, 39%);   /* emerald for AGASA-Pro */
+  --sidebar-primary-foreground: hsl(0, 0%, 100%);
+  --sidebar-accent: hsl(220, 14%, 95%);
+  --sidebar-accent-foreground: hsl(160, 84%, 39%);
+  --sidebar-border: hsl(220, 13%, 91%);
+  --sidebar-ring: hsl(160, 84%, 39%);
+
+  /* ── Ombrages ── */
+  --shadow-sm: 0 1px 3px rgba(26, 39, 54, 0.06);
+  --shadow-md: 0 4px 24px -4px rgba(26, 39, 54, 0.10);
+  --shadow-elegant: 0 10px 40px -10px rgba(26, 39, 54, 0.18);
+  --shadow-glow: 0 8px 32px rgba(16, 185, 129, 0.30);
 }
 
+/* ══════════════════════════════════════════════════
+   2. COLOR TOKENS — Dark Mode
+   ══════════════════════════════════════════════════ */
 .dark {
-  --background: #111111;
-  --foreground: #FAFBFC;
-  --card: #1A1A1A;
-  --card-foreground: #FAFBFC;
-  --popover: #1A1A1A;
-  --popover-foreground: #FAFBFC;
-  --primary: #1B6B3A;
-  --primary-foreground: #FFFFFF;
-  --secondary: #2E86C1;
-  --secondary-foreground: #FFFFFF;
-  --muted: #222222;
-  --muted-foreground: #A0A0A0;
-  --accent: #F39C12;
-  --accent-foreground: #FFFFFF;
-  --destructive: #E74C3C;
-  --destructive-foreground: #FFFFFF;
-  --border: #333333;
-  --input: #333333;
-  --ring: #1B6B3A;
-  --chart-1: #1B6B3A;
-  --chart-2: #2E86C1;
-  --chart-3: #F39C12;
-  --chart-4: #E74C3C;
-  --chart-5: #27AE60;
-  --sidebar: #1A1A1A;
-  --sidebar-foreground: #FAFBFC;
-  --sidebar-primary: #1B6B3A;
-  --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #222222;
-  --sidebar-accent-foreground: #1B6B3A;
-  --sidebar-border: #333333;
-  --sidebar-ring: #1B6B3A;
-  --success: #27AE60;
-  --success-foreground: #FFFFFF;
+  --background: hsl(222, 47%, 7%);      /* #0b1121 */
+  --foreground: hsl(215, 25%, 90%);     /* #e2e8f0 */
+
+  --card: hsl(222, 40%, 13%);           /* #131b2e */
+  --card-foreground: hsl(215, 25%, 90%);
+
+  --popover: hsl(222, 40%, 13%);
+  --popover-foreground: hsl(215, 25%, 90%);
+
+  --primary: hsl(222, 47%, 18%);
+  --primary-foreground: hsl(0, 0%, 100%);
+
+  --secondary: hsl(217, 91%, 60%);
+  --secondary-foreground: hsl(0, 0%, 100%);
+
+  --muted: hsl(222, 47%, 9%);           /* #111827 */
+  --muted-foreground: hsl(215, 16%, 65%); /* #94a3b8 — ratio ≥ 4.8:1 */
+
+  --accent: hsl(160, 84%, 39%);
+  --accent-foreground: hsl(0, 0%, 100%);
+
+  --destructive: hsl(350, 89%, 60%);
+  --destructive-foreground: hsl(0, 0%, 100%);
+
+  --border: hsl(217, 33%, 17%);         /* #1e293b */
+  --input: hsl(217, 33%, 17%);
+  --ring: hsl(217, 91%, 60%);
+
+  --sidebar: hsl(222, 40%, 13%);
+  --sidebar-foreground: hsl(215, 25%, 90%);
+  --sidebar-primary: hsl(160, 84%, 39%);
+  --sidebar-primary-foreground: hsl(0, 0%, 100%);
+  --sidebar-accent: hsl(222, 47%, 9%);
+  --sidebar-accent-foreground: hsl(160, 84%, 39%);
+  --sidebar-border: hsl(217, 33%, 17%);
+  --sidebar-ring: hsl(160, 84%, 39%);
+
+  --success: hsl(160, 84%, 39%);
+  --success-foreground: hsl(0, 0%, 100%);
+
+  --chart-1: hsl(160, 84%, 39%);
+  --chart-2: hsl(217, 91%, 60%);
+  --chart-3: hsl(38, 92%, 50%);
+  --chart-4: hsl(350, 89%, 60%);
+  --chart-5: hsl(258, 90%, 66%);
+
+  /* Dark shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.20);
+  --shadow-md: 0 4px 24px -4px rgba(0, 0, 0, 0.35);
+  --shadow-elegant: 0 10px 40px -10px rgba(0, 0, 0, 0.50);
+  --shadow-glow: 0 8px 32px rgba(16, 185, 129, 0.25);
 }
 
+/* ══════════════════════════════════════════════════
+   3. BASE LAYER
+   ══════════════════════════════════════════════════ */
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.7;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-serif);
+    font-weight: 700;
+  }
+  h1 {
+    font-size: clamp(36px, 6vw, 72px);
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+  }
+  h2 {
+    font-size: clamp(28px, 4vw, 44px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+  h3 {
+    font-size: clamp(22px, 2.5vw, 28px);
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+  }
+  h4 {
+    font-size: clamp(17px, 1.5vw, 20px);
+    line-height: 1.3;
+  }
+  /* Max reading width for prose */
+  p {
+    max-width: 75ch;
+  }
+  /* Focus visible ring — WCAG */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+}
+
+/* ══════════════════════════════════════════════════
+   4. TYPOGRAPHY UTILITIES
+   ══════════════════════════════════════════════════ */
+@layer utilities {
+  .font-serif {
+    font-family: var(--font-serif);
+  }
+  .font-sans {
+    font-family: var(--font-sans);
+  }
+  .text-hero {
+    font-family: var(--font-serif);
+    font-size: clamp(36px, 6vw, 72px);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+  }
+  .text-page-title {
+    font-family: var(--font-serif);
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+  .text-section-title {
+    font-family: var(--font-serif);
+    font-size: clamp(22px, 2.5vw, 28px);
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+  }
+  .text-card-title {
+    font-family: var(--font-serif);
+    font-size: clamp(17px, 1.5vw, 20px);
+    font-weight: 700;
+    line-height: 1.3;
+  }
+  .text-lead {
+    font-family: var(--font-sans);
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.65;
+  }
+  .text-body {
+    font-family: var(--font-sans);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.7;
+  }
+  .text-nav {
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.01em;
+  }
+  .text-btn {
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.0;
+    letter-spacing: 0.01em;
+  }
+  .text-badge {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: 0.02em;
+  }
+  .text-overline {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .text-topbar {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+  .text-caption {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.01em;
+  }
+  .text-footer {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.55;
+  }
+  /* Max reading width */
+  .prose-width {
+    max-width: 640px;
+  }
+}
+
+/* ══════════════════════════════════════════════════
+   5. GRADIENTS
+   ══════════════════════════════════════════════════ */
+.gradient-agasa {
+  background: linear-gradient(135deg, var(--agasa-emerald), var(--agasa-blue));
+}
+
+.gradient-hero {
+  background: linear-gradient(135deg, #0a1628 0%, #112240 40%, #0d3b2e 100%);
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--agasa-emerald), var(--agasa-cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ══════════════════════════════════════════════════
+   6. GLASSMORPHISM
+   ══════════════════════════════════════════════════ */
+.glass {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(16px) saturate(1.8);
+  -webkit-backdrop-filter: blur(16px) saturate(1.8);
+  border-bottom: 1px solid var(--border);
+}
+
+.dark .glass {
+  background: rgba(19, 27, 46, 0.75);
+}
+
+/* ══════════════════════════════════════════════════
+   7. NEUMORPHISM (cards only, never forms)
+   ══════════════════════════════════════════════════ */
+.neu-card {
+  box-shadow:
+    inset 2px 2px 6px rgba(255, 255, 255, 1),
+    inset -2px -2px 6px rgba(0, 0, 0, 0.06),
+    0 1px 3px rgba(0, 0, 0, 0.06);
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.neu-card:hover {
+  box-shadow: var(--shadow-elegant);
+  transform: translateY(-4px);
+}
+
+.dark .neu-card {
+  box-shadow:
+    inset 2px 2px 6px rgba(255, 255, 255, 0.04),
+    inset -2px -2px 6px rgba(0, 0, 0, 0.25),
+    0 1px 3px rgba(0, 0, 0, 0.25);
+}
+
+.dark .neu-card:hover {
+  box-shadow: var(--shadow-elegant);
+  transform: translateY(-4px);
+}
+
+/* ══════════════════════════════════════════════════
+   8. ANIMATIONS & KEYFRAMES
+   ══════════════════════════════════════════════════ */
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(-24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.5; transform: scale(1.5); }
+}
+
+/* Stagger delays for card grids */
+.stagger-1 { animation-delay: 0.0s; }
+.stagger-2 { animation-delay: 0.1s; }
+.stagger-3 { animation-delay: 0.15s; }
+.stagger-4 { animation-delay: 0.2s; }
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Pulse dot (badge "Nouveau") */
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--agasa-emerald);
+  animation: pulse-dot 2s infinite;
+}
+
+/* ══════════════════════════════════════════════════
+   9. ACCESSIBILITY — Reduced Motion
+   ══════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ══════════════════════════════════════════════════
+   10. HOVER MICRO-INTERACTIONS
+   ══════════════════════════════════════════════════ */
+.hover-lift {
+  transition: all 0.35s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-elegant);
+}
+
+.hover-lift-sm {
+  transition: all 0.3s ease;
+}
+.hover-lift-sm:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.hover-glow {
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.hover-glow:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-glow);
+}
+
+/* Icon scale on hover (within a parent .group) */
+.icon-hover {
+  transition: transform 0.3s ease;
+}
+.group:hover .icon-hover {
+  transform: scale(1.1);
+}
+
+/* Chevron slide on hover */
+.chevron-hover {
+  transition: transform 0.3s ease;
+}
+.group:hover .chevron-hover {
+  transform: translateX(4px);
+}
+
+/* ══════════════════════════════════════════════════
+   11. ICON CONTAINER (AGASA standard)
+   ══════════════════════════════════════════════════ */
+.icon-container {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+}
+
+.icon-container:hover {
+  transform: scale(1.1);
+}
+
+/* ══════════════════════════════════════════════════
+   12. BUTTON VARIANTS (AGASA)
+   ══════════════════════════════════════════════════ */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--agasa-emerald), var(--agasa-blue));
+  box-shadow: var(--shadow-glow);
+  border: none;
+  cursor: pointer;
+  min-height: 48px;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(16, 185, 129, 0.4);
+}
+
+.btn-outline-dark {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  min-height: 48px;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-dark:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+/* ══════════════════════════════════════════════════
+   13. RESPONSIVE CONTAINER
+   ══════════════════════════════════════════════════ */
+.container-agasa {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+@media (max-width: 640px) {
+  .container-agasa {
+    padding: 0 16px;
   }
 }

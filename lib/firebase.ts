@@ -10,5 +10,20 @@ const firebaseConfig = {
     appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-export const auth = getAuth(app);
+const enableDemoMode = process.env.NEXT_PUBLIC_ENABLE_DEMO_MODE === "true";
+const hasFirebaseConfig =
+    !!firebaseConfig.apiKey &&
+    !!firebaseConfig.authDomain &&
+    !!firebaseConfig.projectId;
+
+let app = null as ReturnType<typeof getApp> | null;
+let auth = null as ReturnType<typeof getAuth> | null;
+
+if (hasFirebaseConfig) {
+    app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+    auth = getAuth(app);
+} else if (!enableDemoMode) {
+    console.warn("Firebase non configuré: authentification indisponible.");
+}
+
+export { app, auth };

@@ -687,7 +687,8 @@ export default defineSchema({
         permissions: v.array(v.string()),
         statut: v.union(v.literal("actif"), v.literal("inactif")),
         dateCreation: v.number(),
-    }),
+    })
+        .index("by_firebaseUid", ["firebaseUid"]),
 
     auditLogs: defineTable({
         userId: v.string(),
@@ -753,4 +754,63 @@ export default defineSchema({
         modifiePar: v.string(),
         dateModification: v.number(),
     }),
+
+    // === NEOCORTEX OMEGA (aligné Core) ===
+    signaux: defineTable({
+        type: v.string(),
+        source: v.string(),
+        destination: v.optional(v.string()),
+        entiteType: v.optional(v.string()),
+        entiteId: v.optional(v.string()),
+        payload: v.any(),
+        confiance: v.number(),
+        priorite: v.union(
+            v.literal("LOW"),
+            v.literal("NORMAL"),
+            v.literal("HIGH"),
+            v.literal("CRITICAL")
+        ),
+        correlationId: v.string(),
+        traite: v.boolean(),
+        timestamp: v.number(),
+    })
+        .index("by_type", ["type"])
+        .index("by_timestamp", ["timestamp"])
+        .index("by_non_traite", ["traite", "timestamp"])
+        .index("by_correlation", ["correlationId"]),
+
+    historiqueActions: defineTable({
+        action: v.string(),
+        categorie: v.string(),
+        entiteType: v.string(),
+        entiteId: v.optional(v.string()),
+        userId: v.optional(v.string()),
+        details: v.any(),
+        metadata: v.optional(v.any()),
+        timestamp: v.number(),
+    })
+        .index("by_entite", ["entiteType", "entiteId"])
+        .index("by_user", ["userId", "timestamp"])
+        .index("by_timestamp", ["timestamp"])
+        .index("by_categorie", ["categorie"]),
+
+    metriques: defineTable({
+        nom: v.string(),
+        valeur: v.number(),
+        unite: v.optional(v.string()),
+        periode: v.string(),
+        dimensions: v.optional(v.any()),
+        timestamp: v.number(),
+    })
+        .index("by_nom", ["nom"])
+        .index("by_periode", ["periode", "timestamp"]),
+
+    poidsAdaptatifs: defineTable({
+        signal: v.string(),
+        regle: v.string(),
+        poids: v.number(),
+        executionsReussies: v.number(),
+        executionsEchouees: v.number(),
+        dernierAjustement: v.number(),
+    }).index("by_signal", ["signal"]),
 });

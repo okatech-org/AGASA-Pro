@@ -7,10 +7,10 @@ steps:
       - '--build-arg'
       - 'NEXT_PUBLIC_CONVEX_SITE_URL=https://sensible-clam-597.eu-west-1.convex.site'
       - '-t'
-      - 'gcr.io/digitalium-ga/agasa-ga'
+      - 'gcr.io/digitalium-ga/agasa-pro'
       - '.'
 
 images:
-  - 'gcr.io/digitalium-ga/agasa-ga'
+  - 'gcr.io/digitalium-ga/agasa-pro'
 
 timeout: '1200s'

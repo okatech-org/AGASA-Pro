@@ -8,22 +8,55 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { Phone, Mail, Eye, EyeOff } from "lucide-react";
+import { useMutation } from "convex/react";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/lib/firebase";
+import { api } from "@/convex/_generated/api";
 
 type Method = "phone" | "email";
 
 export default function ConnexionPage() {
     const router = useRouter();
-    const [method, setMethod] = useState<Method>("phone");
+    const enableDemoMode = process.env.NEXT_PUBLIC_ENABLE_DEMO_MODE === "true";
+    const [method, setMethod] = useState<Method>(enableDemoMode ? "phone" : "email");
     const [showPassword, setShowPassword] = useState(false);
     const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [otpSent, setOtpSent] = useState(false);
     const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+    const [error, setError] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const syncOperateur = useMutation(api.auth.syncOperateur);
 
-    const handleLogin = () => {
-        // Redirection en fonction du rôle (simulée ici par un push direct au portail)
-        router.push("/tableau-de-bord");
+    const handleLogin = async () => {
+        setError(null);
+        setIsLoading(true);
+        try {
+            if (method === "phone") {
+                if (!enableDemoMode) {
+                    throw new Error("Connexion téléphone indisponible hors mode démonstration.");
+                }
+                localStorage.setItem("agasa-demo-uid", "demo-restaurateur");
+                router.push("/tableau-de-bord");
+                return;
+            }
+
+            if (!auth) {
+                throw new Error("Service d'authentification indisponible.");
+            }
+            const creds = await signInWithEmailAndPassword(auth, email.trim(), password);
+            await syncOperateur({
+                firebaseUid: creds.user.uid,
+                email: creds.user.email || email.trim(),
+            });
+            router.push("/tableau-de-bord");
+        } catch (err) {
+            const message = err instanceof Error ? err.message : "Connexion impossible";
+            setError(message);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -43,6 +76,7 @@ export default function ConnexionPage() {
                             <button
                                 className={`flex-1 py-3 text-sm font-medium rounded-md transition-all flex items-center justify-center gap-2 ${method === "phone" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"
                                     }`}
+                                disabled={!enableDemoMode}
                                 onClick={() => {
                                     setMethod("phone");
                                     setOtpSent(false);
@@ -60,6 +94,10 @@ export default function ConnexionPage() {
                                 Par email
                             </button>
                         </div>
+
+                        {error && (
+                            <p className="text-sm text-red-600 mb-4">{error}</p>
+                        )}
 
                         <div className="min-h-[220px]">
                             {method === "phone" ? (
@@ -123,10 +161,10 @@ export default function ConnexionPage() {
                                             </Button>
                                             <Button
                                                 className="w-full text-lg h-12 bg-success hover:bg-success/90 text-success-foreground mt-4"
-                                                disabled={otp.some(d => !d)}
+                                                disabled={otp.some(d => !d) || isLoading}
                                                 onClick={handleLogin}
                                             >
-                                                Se connecter au portail
+                                                {isLoading ? "Connexion..." : "Se connecter au portail"}
                                             </Button>
                                         </div>
                                     )}
@@ -172,10 +210,10 @@ export default function ConnexionPage() {
 
                                     <Button
                                         className="w-full text-lg h-12 mt-6 bg-success hover:bg-success/90 text-success-foreground"
-                                        disabled={!email || !password}
+                                        disabled={!email || !password || isLoading}
                                         onClick={handleLogin}
                                     >
-                                        Se connecter
+                                        {isLoading ? "Connexion..." : "Se connecter"}
                                     </Button>
                                 </div>
                             )}

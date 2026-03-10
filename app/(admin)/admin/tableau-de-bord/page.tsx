@@ -2,6 +2,7 @@
 
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { useFirebaseSession } from "@/lib/useFirebaseSession";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -18,14 +19,22 @@ function formatMoney(n: number) { return n.toLocaleString("fr-FR"); }
 const COLORS = ["#1B4F72", "#2E86C1", "#48C9B0", "#F39C12", "#E74C3C"];
 
 export default function AdminDashboardPage() {
-    const stats = useQuery(api.admin.queries.getAdminDashboardStats, {});
+    const { uid, isLoading: authLoading } = useFirebaseSession();
+    const stats = useQuery(
+        api.admin.queries.getAdminDashboardStats,
+        uid ? { adminFirebaseUid: uid } : "skip"
+    );
 
-    if (stats === undefined) {
+    if (authLoading || stats === undefined) {
         return (
             <div className="flex items-center justify-center min-h-[50vh]">
                 <div className="w-10 h-10 border-4 border-[#1B4F72] border-t-transparent rounded-full animate-spin" />
             </div>
         );
+    }
+
+    if (!uid) {
+        return <div className="text-sm text-muted-foreground">Connexion administrateur requise.</div>;
     }
 
     // Données pour les graphiques

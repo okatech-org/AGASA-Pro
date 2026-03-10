@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
     ShieldCheck,
@@ -33,6 +34,7 @@ export default function DemoPage() {
             modules: "Agrément + Mon Dossier",
             data: "Agrément actif, 2 inspections, score Smiley 3/5",
             color: "bg-orange-100 text-orange-600 border-orange-200",
+            image: "/images/gabon/gabon-public-service.jpg",
         },
         {
             id: "importateur",
@@ -42,6 +44,7 @@ export default function DemoPage() {
             modules: "Agrément + Importation + Analyses + Mon Dossier",
             data: "3 dossiers d'importation, Agrément CAT 1",
             color: "bg-blue-100 text-blue-600 border-blue-200",
+            image: "/images/gabon/libreville-city.jpg",
         },
         {
             id: "distributeur",
@@ -51,6 +54,7 @@ export default function DemoPage() {
             modules: "Agrément + Phytosanitaire + Mon Dossier",
             data: "Licence intrants active, 2 certificats phyto",
             color: "bg-green-100 text-green-600 border-green-200",
+            image: "/images/gabon/public-health-advice.jpg",
         },
         {
             id: "epicier",
@@ -60,6 +64,7 @@ export default function DemoPage() {
             modules: "Agrément + Mon Dossier",
             data: "Agrément en cours de demande (étape 4/5)",
             color: "bg-purple-100 text-purple-600 border-purple-200",
+            image: "/images/gabon/mobile-citizen-service.jpg",
         },
         {
             id: "industriel",
@@ -69,6 +74,7 @@ export default function DemoPage() {
             modules: "Agrément + Import + Analyses + Phyto + Formation",
             data: "Agrément CAT 1, formations HACCP en cours, analyses labo",
             color: "bg-slate-100 text-slate-600 border-slate-200",
+            image: "/images/gabon/health-safety-hero.jpg",
         },
         {
             id: "admin",
@@ -78,6 +84,7 @@ export default function DemoPage() {
             modules: "Tableau de bord admin, gestion opérateurs, factures...",
             data: "Accès total (Lecture/Écriture restreinte)",
             color: "bg-red-100 text-red-600 border-red-200 flex-col", // flex-col utilisé comme hack pour le rendu du bouton
+            image: "/images/gabon/gabon-compliance-council.jpg",
         }
     ];
 
@@ -109,6 +116,15 @@ export default function DemoPage() {
                         const isAdmin = profile.id === "admin";
                         return (
                             <Card key={i} className={`overflow-hidden border-2 transition-all hover:shadow-lg ${isAdmin ? 'border-primary/50 shadow-md' : 'border-border/50'}`}>
+                                <div className="relative w-full aspect-[16/9]">
+                                    <Image
+                                        src={profile.image}
+                                        alt={`Illustration ${profile.title}`}
+                                        fill
+                                        sizes="(max-width: 768px) 100vw, 33vw"
+                                        className="object-cover"
+                                    />
+                                </div>
                                 <div className={`p-4 ${profile.color} flex items-center gap-3 border-b`}>
                                     <div className="p-2 bg-white rounded-lg shadow-sm">
                                         <Icon className="w-6 h-6" />
@@ -155,24 +171,24 @@ export default function DemoPage() {
 
                 <div className="grid gap-8 md:grid-cols-3">
                     <div className="border rounded-xl p-4 bg-muted/30">
-                        <div className="aspect-video bg-muted rounded-lg mb-4 flex items-center justify-center border border-dashed border-muted-foreground/30">
-                            <span className="text-muted-foreground font-medium text-sm">GIF: Demande Agrément</span>
+                        <div className="aspect-video bg-muted rounded-lg mb-4 relative overflow-hidden border border-dashed border-muted-foreground/30">
+                            <Image src="/images/gabon/gabon-public-service.jpg" alt="Parcours demande agrément" fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover" />
                         </div>
                         <h3 className="font-bold mb-2">Comment faire une demande d'agrément ?</h3>
                         <p className="text-sm text-muted-foreground">Découvrez le formulaire simplifié en 4 étapes pour soumettre votre demande d'agrément sanitaire CAT 2.</p>
                     </div>
 
                     <div className="border rounded-xl p-4 bg-muted/30">
-                        <div className="aspect-video bg-muted rounded-lg mb-4 flex items-center justify-center border border-dashed border-muted-foreground/30">
-                            <span className="text-muted-foreground font-medium text-sm">GIF: Déclaration Importation</span>
+                        <div className="aspect-video bg-muted rounded-lg mb-4 relative overflow-hidden border border-dashed border-muted-foreground/30">
+                            <Image src="/images/gabon/libreville-city.jpg" alt="Parcours déclaration importation" fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover" />
                         </div>
                         <h3 className="font-bold mb-2">Comment déclarer une importation ?</h3>
                         <p className="text-sm text-muted-foreground">Voir le processus complet de saisie des documents pour obtenir une Autorisation de Mise sur le Marché (AMC).</p>
                     </div>
 
                     <div className="border rounded-xl p-4 bg-muted/30">
-                        <div className="aspect-video bg-muted rounded-lg mb-4 flex items-center justify-center border border-dashed border-muted-foreground/30">
-                            <span className="text-muted-foreground font-medium text-sm">GIF: Paiement Mobile Money</span>
+                        <div className="aspect-video bg-muted rounded-lg mb-4 relative overflow-hidden border border-dashed border-muted-foreground/30">
+                            <Image src="/images/gabon/smartphone-guidance.jpg" alt="Parcours paiement mobile money" fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover" />
                         </div>
                         <h3 className="font-bold mb-2">Comment payer par Mobile Money ?</h3>
                         <p className="text-sm text-muted-foreground">L'intégration fluide d'Airtel Money et Moov Africa pour le règlement instantané de vos quittances.</p>

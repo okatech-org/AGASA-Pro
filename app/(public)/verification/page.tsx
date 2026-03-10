@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import {
     Search,
     CheckCircle2,
@@ -36,7 +37,15 @@ export default function VerificationPage() {
     return (
         <div className="min-h-screen bg-muted/20">
             {/* Header */}
-            <div className="bg-primary text-primary-foreground py-6 px-4">
+            <div className="bg-primary text-primary-foreground py-6 px-4 relative overflow-hidden">
+                <Image
+                    src="/images/gabon/certificate-verification.jpg"
+                    alt="Vérification de certificat AGASA-Pro"
+                    fill
+                    sizes="100vw"
+                    className="object-cover opacity-30"
+                />
+                <div className="absolute inset-0 bg-slate-950/45" />
                 <div className="max-w-3xl mx-auto text-center">
                     <div className="flex items-center justify-center gap-3 mb-2">
                         <ShieldCheck className="w-8 h-8" />

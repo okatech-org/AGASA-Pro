@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { Search, Eye, AlertCircle } from "lucide-react";
 import { useState } from "react";
+import { useFirebaseSession } from "@/lib/useFirebaseSession";
 
 function formatDate(ts: number) { return new Date(ts).toLocaleDateString("fr-FR"); }
 
@@ -27,17 +28,28 @@ const ETAPE_BADGES: Record<string, { label: string; color: string }> = {
 };
 
 export default function AdminAgrementsPage() {
+    const { uid, isLoading: authLoading } = useFirebaseSession();
     const [filterCat, setFilterCat] = useState<string>("");
     const [filterEtape, setFilterEtape] = useState<string>("");
     const [viewMode, setViewMode] = useState<"table" | "kanban">("table");
 
-    const agrements = useQuery(api.admin.queries.listAllAgrements, {
-        categorie: filterCat || undefined,
-        etape: filterEtape || undefined,
-    });
+    const agrements = useQuery(
+        api.admin.queries.listAllAgrements,
+        uid
+            ? {
+                adminFirebaseUid: uid,
+                categorie: filterCat || undefined,
+                etape: filterEtape || undefined,
+            }
+            : "skip"
+    );
 
-    if (agrements === undefined) {
+    if (authLoading || agrements === undefined) {
         return <div className="flex items-center justify-center min-h-[50vh]"><div className="w-10 h-10 border-4 border-[#1B4F72] border-t-transparent rounded-full animate-spin" /></div>;
+    }
+
+    if (!uid) {
+        return <div className="text-sm text-muted-foreground">Connexion administrateur requise.</div>;
     }
 
     const kanbanEtapes = ["soumis", "paye", "verification_documents", "demande_complements", "inspection_programmee", "inspection_realisee", "decision_en_cours", "agree", "refuse"];

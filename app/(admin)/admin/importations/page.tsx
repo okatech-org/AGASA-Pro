@@ -6,15 +6,21 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Eye, Ship } from "lucide-react";
+import { useFirebaseSession } from "@/lib/useFirebaseSession";
 
 function formatDate(ts: number) { return new Date(ts).toLocaleDateString("fr-FR"); }
 function formatMoney(n: number) { return n.toLocaleString("fr-FR") + " FCFA"; }
 
 export default function AdminImportationsPage() {
-    const importations = useQuery(api.admin.queries.listAllImportations, {});
+    const { uid, isLoading: authLoading } = useFirebaseSession();
+    const importations = useQuery(api.admin.queries.listAllImportations, uid ? { adminFirebaseUid: uid } : "skip");
 
-    if (importations === undefined) {
+    if (authLoading || importations === undefined) {
         return <div className="flex items-center justify-center min-h-[50vh]"><div className="w-10 h-10 border-4 border-[#1B4F72] border-t-transparent rounded-full animate-spin" /></div>;
+    }
+
+    if (!uid) {
+        return <div className="text-sm text-muted-foreground">Connexion administrateur requise.</div>;
     }
 
     return (

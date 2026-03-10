@@ -1,4 +1,5 @@
 import { PlayCircle, FileText, Smartphone } from "lucide-react";
+import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -10,42 +11,48 @@ export default function TutorielsPage() {
             duration: "2:45",
             type: "Vidéo",
             icon: Smartphone,
-            description: "Découvrez comment vous inscrire sur AGASA-Pro uniquement avec votre numéro de téléphone et votre pièce d'identité."
+            description: "Découvrez comment vous inscrire sur AGASA-Pro uniquement avec votre numéro de téléphone et votre pièce d'identité.",
+            image: "/images/gabon/mobile-citizen-service.jpg",
         },
         {
             title: "Faire une demande d'Agrément Sanitaire (AS)",
             duration: "5:30",
             type: "Vidéo",
             icon: PlayCircle,
-            description: "Le guide pas-à-pas pour remplir votre formulaire d'agrément, joindre vos documents (RCCM, bail) et soumettre le dossier."
+            description: "Le guide pas-à-pas pour remplir votre formulaire d'agrément, joindre vos documents (RCCM, bail) et soumettre le dossier.",
+            image: "/images/gabon/gabon-public-service.jpg",
         },
         {
             title: "Payer sa quittance par Mobile Money",
             duration: "1:15",
             type: "Vidéo",
             icon: PlayCircle,
-            description: "Comment utiliser Airtel Money ou Moov Africa directement depuis le portail pour régler vos frais de dossier en toute sécurité."
+            description: "Comment utiliser Airtel Money ou Moov Africa directement depuis le portail pour régler vos frais de dossier en toute sécurité.",
+            image: "/images/gabon/smartphone-guidance.jpg",
         },
         {
             title: "Déclarer une Importation (DPI) et obtenir l'AMC",
             duration: "6:20",
             type: "Vidéo",
             icon: PlayCircle,
-            description: "La procédure complète pour les importateurs : création de la déclaration, attachement du certificat d'origine, et suivi jusqu'à la délivrance de l'AMC."
+            description: "La procédure complète pour les importateurs : création de la déclaration, attachement du certificat d'origine, et suivi jusqu'à la délivrance de l'AMC.",
+            image: "/images/gabon/libreville-city.jpg",
         },
         {
             title: "Télécharger et imprimer son certificat (QR Code)",
             duration: "1:40",
             type: "Vidéo",
             icon: PlayCircle,
-            description: "Où retrouver vos certificats approuvés dans 'Mon Dossier' et comment les les rendre vérifiables par les inspecteurs."
+            description: "Où retrouver vos certificats approuvés dans 'Mon Dossier' et comment les les rendre vérifiables par les inspecteurs.",
+            image: "/images/gabon/certificate-verification.jpg",
         },
         {
             title: "Guide complet du Portail Opérateur (PDF)",
             duration: "15 pages",
             type: "Document",
             icon: FileText,
-            description: "Le manuel d'utilisation complet au format PDF, avec des captures d'écran de chaque étape."
+            description: "Le manuel d'utilisation complet au format PDF, avec des captures d'écran de chaque étape.",
+            image: "/images/gabon/team-review.jpg",
         }
     ];
 
@@ -63,10 +70,16 @@ export default function TutorielsPage() {
                     const Icon = tuto.icon;
                     return (
                         <Card key={i} className="overflow-hidden hover:shadow-md transition-shadow group border-border/50">
-                            {/* Fausse miniature vidéo */}
                             <div className="aspect-video bg-muted relative flex items-center justify-center overflow-hidden">
-                                <div className="absolute inset-0 bg-primary/5 group-hover:bg-primary/10 transition-colors"></div>
-                                <Icon className="w-16 h-16 text-muted-foreground/40 group-hover:scale-110 transition-transform duration-300" />
+                                <Image
+                                    src={tuto.image}
+                                    alt={`Illustration ${tuto.title}`}
+                                    fill
+                                    sizes="(max-width: 768px) 100vw, 33vw"
+                                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                                />
+                                <div className="absolute inset-0 bg-slate-950/25" />
+                                <Icon className="relative z-10 w-16 h-16 text-white/75 group-hover:scale-110 transition-transform duration-300" />
                                 <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs font-bold px-2 py-1 rounded">
                                     {tuto.duration}
                                 </div>

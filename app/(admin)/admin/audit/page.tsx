@@ -7,15 +7,21 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Search, ShieldAlert } from "lucide-react";
 import { useState } from "react";
+import { useFirebaseSession } from "@/lib/useFirebaseSession";
 
 function formatDateTime(ts: number) { return new Date(ts).toLocaleString("fr-FR"); }
 
 export default function AdminAuditPage() {
-    const logs = useQuery(api.admin.queries.getAuditLogs, {});
+    const { uid, isLoading: authLoading } = useFirebaseSession();
+    const logs = useQuery(api.admin.queries.getAuditLogs, uid ? { adminFirebaseUid: uid } : "skip");
     const [search, setSearch] = useState("");
 
-    if (logs === undefined) {
+    if (authLoading || logs === undefined) {
         return <div className="flex items-center justify-center min-h-[50vh]"><div className="w-10 h-10 border-4 border-[#1B4F72] border-t-transparent rounded-full animate-spin" /></div>;
+    }
+
+    if (!uid) {
+        return <div className="text-sm text-muted-foreground">Connexion administrateur requise.</div>;
     }
 
     const filtered = logs.filter((l: any) =>

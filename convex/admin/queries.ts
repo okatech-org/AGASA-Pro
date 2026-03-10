@@ -1,9 +1,11 @@
 import { query } from "../_generated/server";
 import { v } from "convex/values";
+import { requireAdmin } from "./_auth";
 
 export const getAdminDashboardStats = query({
-    args: {},
-    handler: async (ctx) => {
+    args: { adminFirebaseUid: v.string() },
+    handler: async (ctx, args) => {
+        await requireAdmin(ctx, args.adminFirebaseUid);
         const operateurs = await ctx.db.query("operateurs").collect();
         const agrements = await ctx.db.query("agrements").collect();
         const importations = await ctx.db.query("importations").collect();
@@ -71,11 +73,13 @@ export const getAdminDashboardStats = query({
 
 export const listOperateurs = query({
     args: {
+        adminFirebaseUid: v.string(),
         typeOperateur: v.optional(v.string()),
         province: v.optional(v.string()),
         statut: v.optional(v.string()),
     },
     handler: async (ctx, args) => {
+        await requireAdmin(ctx, args.adminFirebaseUid);
         let results = await ctx.db.query("operateurs").collect();
 
         if (args.typeOperateur) results = results.filter((o) => o.typeOperateur === args.typeOperateur);
@@ -94,8 +98,9 @@ export const listOperateurs = query({
 });
 
 export const getOperateurAdmin = query({
-    args: { operateurId: v.id("operateurs") },
+    args: { adminFirebaseUid: v.string(), operateurId: v.id("operateurs") },
     handler: async (ctx, args) => {
+        await requireAdmin(ctx, args.adminFirebaseUid);
         const op = await ctx.db.get(args.operateurId);
         if (!op) return null;
 
@@ -111,11 +116,13 @@ export const getOperateurAdmin = query({
 
 export const listAllAgrements = query({
     args: {
+        adminFirebaseUid: v.string(),
         categorie: v.optional(v.string()),
         etape: v.optional(v.string()),
         province: v.optional(v.string()),
     },
     handler: async (ctx, args) => {
+        await requireAdmin(ctx, args.adminFirebaseUid);
         let results = await ctx.db.query("agrements").collect();
 
         if (args.categorie) results = results.filter((a) => a.categorie === args.categorie);
@@ -138,8 +145,9 @@ export const listAllAgrements = query({
 });
 
 export const listAllImportations = query({
-    args: {},
-    handler: async (ctx) => {
+    args: { adminFirebaseUid: v.string() },
+    handler: async (ctx, args) => {
+        await requireAdmin(ctx, args.adminFirebaseUid);
         const results = await ctx.db.query("importations").collect();
         return await Promise.all(
             results.sort((a, b) => b.dateCreation - a.dateCreation).map(async (imp) => {
@@ -151,8 +159,9 @@ export const listAllImportations = query({
 });
 
 export const listAllPaiements = query({
-    args: {},
-    handler: async (ctx) => {
+    args: { adminFirebaseUid: v.string() },
+    handler: async (ctx, args) => {
+        await requireAdmin(ctx, args.adminFirebaseUid);
         const results = await ctx.db.query("paiements").collect();
         return await Promise.all(
             results.sort((a, b) => b.dateCreation - a.dateCreation).map(async (p) => {
@@ -164,8 +173,9 @@ export const listAllPaiements = query({
 });
 
 export const getAuditLogs = query({
-    args: {},
-    handler: async (ctx) => {
+    args: { adminFirebaseUid: v.string() },
+    handler: async (ctx, args) => {
+        await requireAdmin(ctx, args.adminFirebaseUid);
         const logs = await ctx.db.query("auditLogs").collect();
         return logs.sort((a, b) => b.timestamp - a.timestamp);
     },

@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { Search, MoreVertical, Eye, UserCheck, UserX, Bell } from "lucide-react";
 import { useState } from "react";
+import { useFirebaseSession } from "@/lib/useFirebaseSession";
 
 function formatDate(ts: number) { return new Date(ts).toLocaleDateString("fr-FR"); }
 
@@ -30,25 +31,36 @@ const STATUT_BADGES: Record<string, { label: string; color: string }> = {
 };
 
 export default function AdminOperateursPage() {
+    const { uid, isLoading: authLoading } = useFirebaseSession();
     const [search, setSearch] = useState("");
     const [filterType, setFilterType] = useState<string>("");
     const [filterStatut, setFilterStatut] = useState<string>("");
     const [filterProvince, setFilterProvince] = useState<string>("");
 
-    const operateurs = useQuery(api.admin.queries.listOperateurs, {
-        typeOperateur: filterType || undefined,
-        province: filterProvince || undefined,
-        statut: filterStatut || undefined,
-    });
+    const operateurs = useQuery(
+        api.admin.queries.listOperateurs,
+        uid
+            ? {
+                adminFirebaseUid: uid,
+                typeOperateur: filterType || undefined,
+                province: filterProvince || undefined,
+                statut: filterStatut || undefined,
+            }
+            : "skip"
+    );
 
     const updateStatus = useMutation(api.admin.mutations.updateOperateurStatus);
 
-    if (operateurs === undefined) {
+    if (authLoading || operateurs === undefined) {
         return (
             <div className="flex items-center justify-center min-h-[50vh]">
                 <div className="w-10 h-10 border-4 border-[#1B4F72] border-t-transparent rounded-full animate-spin" />
             </div>
         );
+    }
+
+    if (!uid) {
+        return <div className="text-sm text-muted-foreground">Connexion administrateur requise.</div>;
     }
 
     const filtered = operateurs.filter((o: any) =>
@@ -130,11 +142,11 @@ export default function AdminOperateursPage() {
                                                         <Link href={`/admin/operateurs/${op._id}`}><Eye className="w-4 h-4" /></Link>
                                                     </Button>
                                                     {op.statut === "actif" ? (
-                                                        <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500" onClick={() => updateStatus({ operateurId: op._id, statut: "suspendu" })}>
+                                                        <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500" onClick={() => updateStatus({ adminFirebaseUid: uid, operateurId: op._id, statut: "suspendu" })}>
                                                             <UserX className="w-4 h-4" />
                                                         </Button>
                                                     ) : (
-                                                        <Button variant="ghost" size="icon" className="h-8 w-8 text-green-500" onClick={() => updateStatus({ operateurId: op._id, statut: "actif" })}>
+                                                        <Button variant="ghost" size="icon" className="h-8 w-8 text-green-500" onClick={() => updateStatus({ adminFirebaseUid: uid, operateurId: op._id, statut: "actif" })}>
                                                             <UserCheck className="w-4 h-4" />
                                                         </Button>
                                                     )}

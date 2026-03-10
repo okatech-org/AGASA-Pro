@@ -1,5 +1,6 @@
 import { mutation } from "../_generated/server";
 import { v } from "convex/values";
+import { internal } from "../_generated/api";
 
 export const creerDeclaration = mutation({
     args: {
@@ -65,6 +66,46 @@ export const soumettreImportation = mutation({
             etapeActuelle: "soumis",
             historiqueEtapes: [...imp.historiqueEtapes, { etape: "soumis", date: now, commentaire: "Dossier soumis par l'opérateur" }],
             dateModification: now,
+        });
+
+        const operateur = await ctx.db.get(imp.operateurId);
+        const payload = {
+            type: "declaration_importation",
+            source: "AGASA-Pro",
+            dossierId: String(args.importId),
+            numeroDossier: imp.numeroDossier,
+            typeImportation: imp.typeImportation,
+            portArrivee: imp.portArrivee,
+            paysOrigine: imp.paysOrigine,
+            valeurDeclaree: imp.valeurDeclaree,
+            nombreConteneurs: imp.nombreConteneurs,
+            montantTotal: imp.montantTotal,
+            operateur: operateur
+                ? {
+                    id: String(operateur._id),
+                    raisonSociale: operateur.raisonSociale,
+                    rccm: operateur.rccm,
+                    province: operateur.province,
+                }
+                : null,
+            dateSoumission: now,
+        };
+
+        const fluxRefId = await ctx.db.insert("fluxInterApps", {
+            fluxCode: "F1",
+            direction: "envoi",
+            typeMessage: "declaration_importation",
+            payload: JSON.stringify(payload),
+            statut: "envoye",
+            dateEnvoi: now,
+            tentatives: 0,
+        });
+
+        const internalApi = internal as any;
+        await ctx.scheduler.runAfter(0, internalApi.gateway.outbound.pushToCore, {
+            typeMessage: "declaration_importation",
+            payload,
+            fluxRefId,
         });
 
         return { success: true };

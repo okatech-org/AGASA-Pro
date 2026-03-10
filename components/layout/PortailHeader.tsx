@@ -40,7 +40,7 @@ export function PortailHeader() {
     const isDemo = operateur?.isDemo ?? true;
 
     return (
-        <header className="sticky top-8 z-40 flex w-full h-16 shrink-0 items-center justify-between border-b bg-card px-4 shadow-sm md:px-6">
+        <header className="sticky top-8 z-40 flex w-full h-[72px] shrink-0 items-center justify-between border-b px-4 shadow-[var(--shadow-sm)] md:px-6 glass">
 
             {/* Mobile : Logo et Menu Hamburger */}
             <div className="flex items-center gap-3 md:hidden">
@@ -62,21 +62,24 @@ export function PortailHeader() {
                 </Sheet>
 
                 <Link href="/tableau-de-bord" className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold text-xs">
+                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[var(--agasa-emerald)] to-[var(--agasa-blue)] flex items-center justify-center text-white font-bold text-xs shadow-[var(--shadow-glow)]">
                         AG
                     </div>
-                    <span className="font-bold truncate max-w-[120px]">AGASA-Pro</span>
+                    <div>
+                        <span className="font-serif font-bold text-base leading-none block">AGASA</span>
+                        <span className="text-caption text-muted-foreground">Pro</span>
+                    </div>
                 </Link>
             </div>
 
             {/* Desktop : Search Bar */}
             <div className="hidden md:flex flex-1 items-center gap-4 md:ml-4 lg:ml-8 lg:max-w-[500px]">
                 <form className="relative w-full">
-                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                     <Input
                         type="search"
                         placeholder="Rechercher un dossier, certificat, facture..."
-                        className="w-full bg-background pl-9 h-10 border-muted focus-visible:ring-primary"
+                        className="w-full bg-background/60 pl-9 h-12 border-muted rounded-xl focus-visible:ring-[var(--agasa-emerald)]"
                     />
                 </form>
             </div>
@@ -85,9 +88,9 @@ export function PortailHeader() {
             <div className="flex-1 md:hidden"></div>
 
             {/* Actions et Profil */}
-            <div className="flex items-center gap-2 md:gap-4">
+            <div className="flex items-center gap-2 md:gap-3">
                 {isDemo && (
-                    <div className="hidden lg:flex items-center gap-2 bg-success/20 text-success px-3 py-1.5 rounded-full text-xs font-semibold border border-success/30">
+                    <div className="hidden lg:flex items-center gap-2 bg-[var(--agasa-emerald)]/14 text-[var(--agasa-emerald)] px-3 py-1.5 rounded-full text-xs font-semibold border border-[var(--agasa-emerald)]/20">
                         <ShieldCheck className="w-4 h-4" />
                         MODE DÉMO
                     </div>
@@ -102,20 +105,20 @@ export function PortailHeader() {
 
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="relative h-10 w-10 rounded-full md:w-auto md:px-2 md:py-1 md:h-auto gap-2">
+                        <Button variant="ghost" className="relative h-12 w-12 rounded-full md:w-auto md:px-2 md:py-1 md:h-auto gap-2">
                             <span className="hidden md:flex flex-col items-end text-sm">
                                 <span className="font-semibold leading-none text-foreground">{raisonSociale}</span>
                                 <span className="text-xs text-muted-foreground mt-1">{ville}</span>
                             </span>
-                            <Avatar className="h-8 w-8 sm:h-9 sm:w-9 border border-border shadow-sm">
+                            <Avatar className="h-9 w-9 border border-border shadow-[var(--shadow-sm)]">
                                 <AvatarImage src="" alt={raisonSociale} />
-                                <AvatarFallback className="bg-primary/10 text-primary font-bold">
+                                <AvatarFallback className="bg-[var(--agasa-emerald)]/12 text-[var(--agasa-emerald)] font-bold">
                                     {raisonSociale.substring(0, 2).toUpperCase()}
                                 </AvatarFallback>
                             </Avatar>
                         </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-56" align="end" forceMount>
+                    <DropdownMenuContent className="w-56 rounded-xl" align="end" forceMount>
                         <DropdownMenuLabel className="font-normal border-b pb-2">
                             <div className="flex flex-col space-y-1">
                                 <p className="text-sm font-medium leading-none">{raisonSociale}</p>
