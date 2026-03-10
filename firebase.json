@@ -1,5 +1,6 @@
 {
     "hosting": {
+        "site": "agasa-pro",
         "public": "public",
         "ignore": [
             "firebase.json",
